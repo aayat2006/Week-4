@@ -1,0 +1,26 @@
+Alert 1: SSH Brute Force Attack (Hydra Simulation)
+Who: Source IP 127.0.0.1 targeting local Linux user account ubuntu.
+What: 20 rapid failed SSH login attempts (Failed password for ubuntu) within a few seconds.   
+When: November 13, 2026, ~14:30 IST (Apne Splunk search ka exact _time likhein).
+Where: Ubuntu Virtual Machine (ubuntu-VirtualBox / /var/log/auth.log).   
+Why: Automated dictionary brute-force attack executed using Hydra (hydra -l ubuntu -P pass.txt ssh://127.0.0.1).   
+Verdict: True Positive (Confirmed unauthorized brute-force activity, simulated during lab testing).   
+Next Step: Block the attacking IP address at the host firewall (ufw/iptables), disable password-based SSH authentication, and enforce SSH key-based login.
+
+
+Alert 2: Multiple Failed Windows Logons (EventCode 4625)
+Who: Unknown source IP attempting authentication against Windows account Administrator.
+What: High volume of failed Windows logon events (EventCode=4625) triggered by scheduled SPL detection rule.   
+When: November 13, 2026, ~15:00 IST.Where: Windows Endpoint (WIN-ENDPOINT-VM / Windows Security Event Log).   
+Why: Credential stuffing or password spraying attempt targeting privileged local administrator credentials.
+Verdict: True Positive.  
+Next Step: Verify if any login succeeded (EventCode=4624) after the failures, lock or reset the targeted account password if compromised, and isolate the source IP.
+ 
+ 
+Alert 3: Authorized Administrative Sudo / Authentication Activity
+Who: Local user ubuntu executing privileged commands via sudo.
+What: Multiple sudo authentication and session opened events recorded in /var/log/auth.log.  
+When: November 13, 2026, ~13:45 IST.Where: Ubuntu Virtual Machine (ubuntu-VirtualBox).  
+Why: System administrator installing Splunk Enterprise, Nmap, and Hydra packages during scheduled lab setup.  
+Verdict: False Positive (Legitimate administrative activity). 
+Next Step: Close the alert as benign/expected behavior and add known administrative maintenance windows to the baseline documentation to prevent future alert fatigue.
